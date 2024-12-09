@@ -1,0 +1,18 @@
+services:
+  couchbasedb:
+    image: couchbase/server:community
+    container_name: couchbasedb
+    hostname: couchbasedb
+    ports:
+      - '11210:11210'
+      - '8091-8096:8091-8096'
+    environment:
+      - COUCHBASE_BUCKET=default
+      - COUCHBASE_BUCKET_RAMSIZE=512
+      - COUCHBASE_ADMINISTRATOR_USERNAME=${DB_ADMIN_NAME}
+      - COUCHBASE_ADMINISTRATOR_PASSWORD=${DB_ADMIN_PASS}
+    volumes:
+      - /var/lib/srv/$USER/docker/couchbase/server/community/rootfs/data/db/couchbase:/opt/couchbase/var
+    extra_hosts:
+      - 'localhost:172.17.0.1'
+      - 'host.docker.internal:host-gateway'
