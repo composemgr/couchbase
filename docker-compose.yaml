@@ -1,0 +1,46 @@
+# nginx proxy address - http://172.17.0.1:8091
+
+name: couchbase
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  couchbase:
+    image: couchbase/server:community
+    container_name: couchbase
+    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
+    restart: always
+    pull_policy: always
+    stdin_open: true
+    tty: true
+    logging: *default-logging
+    environment:
+      - COUCHBASE_BUCKET=default
+      - COUCHBASE_BUCKET_RAMSIZE=1024
+      - COUCHBASE_ADMINISTRATOR_USERNAME=${DB_ADMIN_NAME:-root}
+      - COUCHBASE_ADMINISTRATOR_PASSWORD=${DB_ADMIN_PASS:-mmLMw7kyH5wJwBMYm0VLpnDHvp5LlkSA}
+    ports:
+      - '11210:11210'
+      - '8092-8096:8092-8096'
+      - '172.17.0.1:8091:8091'
+    volumes:
+      - '/var/lib/srv/$USER/docker/db/couchbase/couchbase:/opt/couchbase/var'
+    healthcheck:
+      test: curl --fail http://localhost:8091/pools || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    extra_hosts:
+      - 'localhost:172.17.0.1'
+      - 'couchbasedb:host-gateway'
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - couchbase
+
+networks:
+  couchbase:
+    name: couchbase
+    external: false
