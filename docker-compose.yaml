@@ -8,7 +8,7 @@ x-logging: &default-logging
   driver: json-file
 
 services:
-  couchbase:
+  server:
     image: couchbase/server:community
     container_name: couchbase
     hostname: ${BASE_HOST_NAME:-$HOSTNAME}
@@ -27,7 +27,7 @@ services:
       - '8092-8096:8092-8096'
       - '172.17.0.1:8091:8091'
     volumes:
-      - '/var/lib/srv/$USER/docker/db/couchbase/couchbase:/opt/couchbase/var'
+      - '/var/lib/srv/$USER/databases/couchbase/couchbase:/opt/couchbase/var'
     healthcheck:
       test: curl --fail http://localhost:8091/pools || exit 1
       interval: 10s
