@@ -28,7 +28,7 @@ services:
       - '8092-8096:8092-8096'
       - '172.17.0.1:8091:8091'
     volumes:
-      - './rootfs/db/couchbase/couchbase:/opt/couchbase/var'
+      - './rootfs/data/db/couchbase/couchbase:/opt/couchbase/var'
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://localhost:8091/pools || exit 1']
       interval: 10s
