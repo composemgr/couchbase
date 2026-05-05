@@ -48,7 +48,7 @@ See `docker-compose.yaml` for complete list of configurable options.
 
 ## 📂 Volumes
 
-- `./rootfs/data/db/couchbase/couchbase` - Data storage
+- `./volumes/data/db/couchbase/couchbase` - Data storage
 
 ## 🔐 Security
 
