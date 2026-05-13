@@ -9,7 +9,7 @@ x-logging: &default-logging
 
 services:
   app:
-    image: couchbase/server:community
+    image: couchbase/server:latest
     container_name: couchbase-app
     hostname: ${BASE_HOST_NAME:-$HOSTNAME}
     restart: always
@@ -20,7 +20,7 @@ services:
     environment:
       TZ: ${TZ:-America/New_York}
       COUCHBASE_BUCKET: ${DB_CREATE_DATABASE_NAME:-default}
-      COUCHBASE_BUCKET_RAMSIZE: 1024
+      COUCHBASE_BUCKET_RAMSIZE: ${COUCHBASE_BUCKET_RAMSIZE:-1024}
       COUCHBASE_ADMINISTRATOR_USERNAME: ${DB_ADMIN_NAME:-admin}
       COUCHBASE_ADMINISTRATOR_PASSWORD: ${DB_ADMIN_PASS:-changeme_admin_password}
     ports:
