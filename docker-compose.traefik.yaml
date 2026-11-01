@@ -1,0 +1,56 @@
+name: couchbase
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  app:
+    image: couchbase/server:latest
+    container_name: couchbase-app
+    domainname: ${BASE_DOMAIN_NAME:-example.com}
+    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
+    restart: always
+    pull_policy: always
+    stdin_open: true
+    tty: true
+    logging: *default-logging
+    environment:
+      TZ: ${TZ:-America/New_York}
+      CONTAINER_NAME: couchbase-app
+      HOSTNAME: ${BASE_HOST_NAME:-$HOSTNAME}
+      COUCHBASE_BUCKET: ${DB_CREATE_DATABASE_NAME:-default}
+      COUCHBASE_BUCKET_RAMSIZE: ${COUCHBASE_BUCKET_RAMSIZE:-1024}
+      COUCHBASE_ADMINISTRATOR_USERNAME: ${DB_ADMIN_NAME:-admin}
+      COUCHBASE_ADMINISTRATOR_PASSWORD: ${DB_ADMIN_PASS:-changeme_admin_password}
+    volumes:
+      - './volumes/db/couchbase/couchbase:/opt/couchbase/var:z'
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -f http://localhost:8091/pools || exit 1']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=traefik'
+      - 'traefik.http.routers.couchbase-app.entrypoints=http'
+      - 'traefik.http.routers.couchbase-app.rule=Host(`${BASE_HOST_NAME:-$HOSTNAME}`)'
+      - 'traefik.http.routers.couchbase-app.middlewares=couchbase-app-https-redirect'
+      - 'traefik.http.middlewares.couchbase-app-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.couchbase-app-secure.entrypoints=https'
+      - 'traefik.http.routers.couchbase-app-secure.rule=Host(`${BASE_HOST_NAME:-$HOSTNAME}`)'
+      - 'traefik.http.routers.couchbase-app-secure.tls.certresolver=cloudflare'
+      - 'traefik.http.routers.couchbase-app-secure.service=couchbase-app'
+      - 'traefik.http.services.couchbase-app.loadbalancer.server.port=8091'
+    networks:
+      - couchbase
+      - traefik
+
+
+networks:
+  couchbase:
+    name: couchbase
+    external: false
+  traefik:
+    external: true
