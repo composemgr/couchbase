@@ -29,6 +29,7 @@ services:
       - '11207:11207'
       - '11280:11280'
       - '18091-18097:18091-18097'
+      - '11210:11210'
     volumes:
       - './volumes/db/couchbase/couchbase:/opt/couchbase/var:z'
     healthcheck:
