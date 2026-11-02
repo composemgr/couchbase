@@ -24,6 +24,11 @@ services:
       COUCHBASE_BUCKET_RAMSIZE: ${COUCHBASE_BUCKET_RAMSIZE:-1024}
       COUCHBASE_ADMINISTRATOR_USERNAME: ${DB_ADMIN_NAME:-admin}
       COUCHBASE_ADMINISTRATOR_PASSWORD: ${DB_ADMIN_PASS:-changeme_admin_password}
+    ports:
+      - '8092-8097:8092-8097'
+      - '11207:11207'
+      - '11280:11280'
+      - '18091-18097:18091-18097'
     volumes:
       - './volumes/db/couchbase/couchbase:/opt/couchbase/var:z'
     healthcheck:

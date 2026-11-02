@@ -81,6 +81,8 @@ docker compose -f docker-compose.traefik.yaml --env-file .env up -d
 
 - **KV (native port)**: localhost:11210
 
+Non-HTTP protocol ports are published identically in all three compose variants, because they cannot be proxied over HTTP: `8092-8097`, `11207`, `11280`, `18091-18097` (cluster services).
+
 ## 📂 Volumes
 
 - `./volumes/db/couchbase/couchbase` - Database data

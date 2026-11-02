@@ -29,6 +29,10 @@ services:
     ports:
       - '11210:11210'
       - '172.17.0.1:64146:8091'
+      - '8092-8097:8092-8097'
+      - '11207:11207'
+      - '11280:11280'
+      - '18091-18097:18091-18097'
     volumes:
       - './volumes/db/couchbase/couchbase:/opt/couchbase/var:z'
     healthcheck:
